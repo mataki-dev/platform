@@ -335,6 +335,61 @@ func TestValidate_SortAppendsTiebreaker(t *testing.T) {
 	}
 }
 
+func TestValidate_CursorValid(t *testing.T) {
+	sort := []search.SortDirective{
+		{Field: "created_at", Column: "created_at", Dir: search.Desc},
+		{Field: "id", Column: "id", Dir: search.Asc},
+	}
+	lastRow := map[string]any{
+		"created_at": "2026-03-15T10:30:00Z",
+		"id":         "task_abc",
+	}
+	token := search.EncodeCursor(lastRow, sort)
+
+	req := search.SearchRequest{
+		Cursor: token,
+		Sort: []search.SortDirectiveInput{
+			{Field: "created_at", Direction: "desc"},
+		},
+	}
+	vs, errs := search.Validate(req, testSchema)
+	if len(errs) != 0 {
+		t.Fatalf("expected no errors, got %v", errs)
+	}
+	if vs.Cursor == nil {
+		t.Fatal("expected decoded cursor")
+	}
+}
+
+func TestValidate_CursorMalformed(t *testing.T) {
+	req := search.SearchRequest{
+		Cursor: "not-a-valid-cursor!!!",
+	}
+	_, errs := search.Validate(req, testSchema)
+	assertHasError(t, errs, "cursor", search.ErrInvalidCursor)
+}
+
+func TestValidate_CursorSortMismatch(t *testing.T) {
+	sort := []search.SortDirective{
+		{Field: "created_at", Column: "created_at", Dir: search.Desc},
+		{Field: "id", Column: "id", Dir: search.Asc},
+	}
+	lastRow := map[string]any{
+		"created_at": "2026-03-15T10:30:00Z",
+		"id":         "task_abc",
+	}
+	token := search.EncodeCursor(lastRow, sort)
+
+	req := search.SearchRequest{
+		Cursor: token,
+		Sort: []search.SortDirectiveInput{
+			{Field: "priority", Direction: "asc"},
+		},
+	}
+	_, errs := search.Validate(req, testSchema)
+	assertHasError(t, errs, "cursor", search.ErrInvalidCursor)
+}
+
 func TestValidate_LimitDefaults(t *testing.T) {
 	req := search.SearchRequest{}
 	vs, errs := search.Validate(req, testSchema)

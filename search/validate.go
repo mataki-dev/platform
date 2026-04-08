@@ -300,6 +300,32 @@ func Validate(req SearchRequest, schema ResourceSchema) (ValidatedSearch, []Vali
 		}
 	}
 
+	// --- Cursor ---
+	if req.Cursor != "" && !vs.RelevanceSort {
+		decoded, err := DecodeCursor(req.Cursor)
+		if err != nil {
+			errs = append(errs, ValidationError{
+				Field:   "cursor",
+				Code:    ErrInvalidCursor,
+				Message: "Cursor is malformed or invalid.",
+			})
+		} else if decoded.Version != cursorVersion {
+			errs = append(errs, ValidationError{
+				Field:   "cursor",
+				Code:    ErrInvalidCursor,
+				Message: "Unsupported cursor version.",
+			})
+		} else if !CursorMatchesSort(decoded, vs.Sort) {
+			errs = append(errs, ValidationError{
+				Field:   "cursor",
+				Code:    ErrInvalidCursor,
+				Message: "Cursor sort signature does not match the request sort order.",
+			})
+		} else {
+			vs.Cursor = decoded
+		}
+	}
+
 	// --- Cursor vs relevance sort ---
 	if req.Cursor != "" && vs.RelevanceSort {
 		errs = append(errs, ValidationError{
