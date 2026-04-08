@@ -73,3 +73,15 @@ func ToHumaError(err *SemanticError) huma.StatusError {
 		body: NewErrorBody(err),
 	}
 }
+
+// NewHumaErrorHandler returns a function that converts any error to a
+// huma.StatusError. If the error is a *SemanticError, it renders with
+// the correct status and envelope. Otherwise, it wraps as 500 Internal.
+func NewHumaErrorHandler() func(err error) huma.StatusError {
+	return func(err error) huma.StatusError {
+		if se, ok := err.(*SemanticError); ok {
+			return ToHumaError(se)
+		}
+		return ToHumaError(NewInternal("An unexpected error occurred.", WithCause(err)))
+	}
+}

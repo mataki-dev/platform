@@ -2,6 +2,7 @@ package errors_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/mataki-dev/platform/errors"
@@ -78,5 +79,24 @@ func TestHumaStatusError(t *testing.T) {
 
 	if humaErr.GetStatus() != 404 {
 		t.Errorf("GetStatus() = %d, want %d", humaErr.GetStatus(), 404)
+	}
+}
+
+func TestNewHumaErrorHandler_SemanticError(t *testing.T) {
+	handler := errors.NewHumaErrorHandler()
+	semErr := errors.NewConflict("duplicate")
+	humaErr := handler(semErr)
+
+	if humaErr.GetStatus() != 409 {
+		t.Errorf("GetStatus() = %d, want 409", humaErr.GetStatus())
+	}
+}
+
+func TestNewHumaErrorHandler_NonSemanticError(t *testing.T) {
+	handler := errors.NewHumaErrorHandler()
+	humaErr := handler(fmt.Errorf("random failure"))
+
+	if humaErr.GetStatus() != 500 {
+		t.Errorf("GetStatus() = %d, want 500", humaErr.GetStatus())
 	}
 }
