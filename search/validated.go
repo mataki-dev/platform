@@ -5,7 +5,7 @@ package search
 type ValidatedSearch struct {
 	Filters       []ValidatedFilter
 	Sort          []SortDirective // includes tiebreaker
-	Cursor        any             // *DecodedCursor after Task 9; any for now
+	Cursor        *DecodedCursor  // nil if not provided
 	Offset        *int            // nil if not provided
 	Limit         int
 	Fields        []string // nil means all defaults
