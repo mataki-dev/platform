@@ -1,0 +1,33 @@
+# Claude/Superpowers
+.superpowers/
+.claude/
+
+# Worktrees
+.worktrees/
+
+# Build output
+bin/
+dist/
+
+# Test
+coverage.out
+coverage.html
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Brainstorming specs (local only, survives squash)
+.claude-specs/
