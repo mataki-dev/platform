@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Mint Mataki Robot App token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.MATAKI_ROBOT_APP_ID }}
           private-key: ${{ secrets.MATAKI_ROBOT_PRIVATE_KEY }}
