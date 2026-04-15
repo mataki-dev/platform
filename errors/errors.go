@@ -93,3 +93,7 @@ func NewInvalidInput(msg string, opts ...Option) *SemanticError {
 func NewInternal(msg string, opts ...Option) *SemanticError {
 	return newError("internal", 500, msg, opts)
 }
+
+func NewUnauthorized(msg string, opts ...Option) *SemanticError {
+	return newError("unauthorized", 401, msg, opts)
+}

@@ -5,6 +5,7 @@ go 1.26.1
 require (
 	github.com/danielgtaylor/huma/v2 v2.37.3
 	github.com/jackc/pgx/v5 v5.9.1
+	github.com/mr-tron/base58 v1.3.0
 	golang.org/x/crypto v0.50.0
 )
 
