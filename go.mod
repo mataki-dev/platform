@@ -5,7 +5,7 @@ go 1.26.1
 require (
 	github.com/danielgtaylor/huma/v2 v2.38.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
-	github.com/jackc/pgx/v5 v5.9.2
+	github.com/jackc/pgx/v5 v5.10.0
 	github.com/mr-tron/base58 v1.3.0
 	golang.org/x/crypto v0.51.0
 	golang.org/x/oauth2 v0.36.0
