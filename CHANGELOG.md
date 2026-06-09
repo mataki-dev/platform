@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/mataki-dev/platform/compare/v0.3.0...v0.4.0) (2026-06-09)
+
+
+### Features
+
+* **search:** support operation metadata ([#17](https://github.com/mataki-dev/platform/issues/17)) ([b54f5ba](https://github.com/mataki-dev/platform/commit/b54f5bafd8d115b85c153f5383690922d1bfa865))
+
 # [0.3.0](https://github.com/mataki-dev/platform/compare/v0.2.0...v0.3.0) (2026-05-17)
 
 
