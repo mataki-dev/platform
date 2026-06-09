@@ -19,6 +19,7 @@ type operationConfig struct {
 	tag         string
 	summary     string
 	description string
+	metadata    map[string]any
 	middleware  []func(ctx huma.Context, next func(huma.Context))
 }
 
@@ -40,6 +41,21 @@ func WithDescription(desc string) OperationOption {
 // WithMiddleware adds per-operation middleware.
 func WithMiddleware(mw ...func(ctx huma.Context, next func(huma.Context))) OperationOption {
 	return func(c *operationConfig) { c.middleware = append(c.middleware, mw...) }
+}
+
+// WithMetadata adds OpenAPI/runtime metadata to the generated Huma operation.
+func WithMetadata(metadata map[string]any) OperationOption {
+	return func(c *operationConfig) {
+		if len(metadata) == 0 {
+			return
+		}
+		if c.metadata == nil {
+			c.metadata = make(map[string]any, len(metadata))
+		}
+		for key, value := range metadata {
+			c.metadata[key] = value
+		}
+	}
 }
 
 // SearchInput wraps SearchRequest as a Huma request body.
@@ -71,6 +87,7 @@ func RegisterSearchOperation[T any](
 		Path:        path,
 		Summary:     cfg.summary,
 		Description: cfg.description,
+		Metadata:    cfg.metadata,
 		Middlewares: huma.Middlewares(cfg.middleware),
 	}
 	if cfg.tag != "" {
